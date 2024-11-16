@@ -1,6 +1,7 @@
 // Filesystem Operations
 use std::fs;
 use std::io::{BufRead, Write};
+use std::env;
 
 #[tauri::command]
 pub fn scan_path(path:&str) -> Vec<String> {
@@ -24,7 +25,15 @@ fn read_file(path:&str) -> Vec<String> {
     let file = fs::read(path);
     match file {
         Ok(res) => { 
-            return res.lines().map(|x| x.unwrap()).collect::<Vec<String>>();
+            let res_str = res.lines().map(
+                |x| x.unwrap_or(String::from("unsupported file type"))
+                ).collect::<Vec<String>>();
+            
+            if res_str[0] == "unsupported file type" {
+                return vec![String::from("Unsupported file type"), ];
+            } else {
+                return res_str;
+            }
         },
         Err(e) => {
             return vec![String::from(format!("File not found : {}", e)),]
@@ -73,7 +82,8 @@ pub fn save_file_as(path:&str, data:&str) -> String  {
     }
 }
 
-fn save_file(path:&str, data:&str) -> String {
+#[tauri::command]
+pub fn save_file(path:&str, data:&str) -> String {
     // Create new file 
     match fs::File::create_new(path) {
         // Try to write bytes data
@@ -85,5 +95,31 @@ fn save_file(path:&str, data:&str) -> String {
              }
         },
         Err(e) => return String::from(format!("Error creating file : {}", e)), 
+    }
+}
+
+#[tauri::command]
+pub fn get_cwd() -> String {
+    let dir = env::current_dir();
+
+    match dir {
+        Ok(dir) => {
+            if let Some(res) = dir.to_str() {
+                return String::from(res);
+            } else {
+                return String::from("Error getting current directory");
+            }
+        },
+        Err(e) => return e.to_string(),
+    }
+}
+
+#[tauri::command]
+pub fn set_cwd(path:&str) -> String {
+    let dir = env::set_current_dir(path);
+
+    match dir {
+        Ok(_) => return String::from(format!("Directory updated : {}", path)),
+        Err(e) => return e.to_string(),
     }
 }
