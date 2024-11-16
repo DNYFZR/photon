@@ -4,7 +4,7 @@
 mod filesystem;
 
 // Components
-use filesystem::{ scan_path, save_file_as };
+use filesystem::{ get_cwd, set_cwd, scan_path, save_file, save_file_as };
 
 
 // Configuration
@@ -14,7 +14,10 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
+            get_cwd,
+            set_cwd,
             scan_path,
+            save_file,
             save_file_as,
         ])
         .run(tauri::generate_context!())
