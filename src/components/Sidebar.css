@@ -1,5 +1,5 @@
 .sidebar {
-  z-index: 998;
+  z-index: 999;
   position: fixed;
   min-height: 100vh;
   top: 0;
@@ -8,13 +8,14 @@
 }
 
 .sidebar-title {
-  color: var(--sub-text-color);
-  border-bottom: 1px dashed var(--main-text-color);
+  color: var(--text-color);
+  border-bottom: 1px dashed var(--text-color);
   font-size: 1em;
   font-weight: 500;
   font-weight: bold;
   max-width: 12pc;
   margin: 0 auto;
+  margin-bottom: 2vw;
   
 }
 .sidebar-button {
@@ -25,9 +26,7 @@
   height: 40px;
   padding: unset;
   min-width: unset;
-  border: none;
-  border: 8px;
-  background-color: var(--dark-bg-color);
+  background-color: var(--dark-background-color);
 }
 
 .sidebar-button-img{
@@ -36,7 +35,7 @@
 }
 
 .sidebar-container {
-  background-color: black;
+  background-color: var( --dark-background-color);
   left: 0;
   padding: 0em;
   display: flex;
@@ -51,7 +50,7 @@
   padding: 1em 0em;
   flex-grow: 0;
   flex-shrink: 0;
-  min-width: 50vw;
+  min-width: 400px;
   max-width: 90vw;
   display: flex;
   flex-direction: row;
@@ -82,13 +81,13 @@
 .sidebar-main .sidebar-resizer {
   flex-grow: 0;
   flex-shrink: 0;
-  flex-basis: 6px;
+  flex-basis: 30px;
   justify-self: flex-end;
   cursor: col-resize;
   resize: horizontal;
 }
 
 .sidebar-main .sidebar-resizer:hover, .sidebar-main .sidebar-resizer:active {
-  width: 12px;
+  width: 30px;
   height: inherit;
 }

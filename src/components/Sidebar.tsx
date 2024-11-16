@@ -1,3 +1,4 @@
+import logo from "/wave-128.png";
 import React from "react";
 import { useState, useRef } from "react";
 import "./Sidebar.css";
@@ -54,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
             // onMouseDown={(e) => e.preventDefault()}
           >
             <div className="sidebar-content">
-              <h3 className="sidebar-title">MENU</h3>
+              <h3 className="sidebar-title">Control Panel</h3>
               {children}
             </div>
             
