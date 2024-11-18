@@ -1,8 +1,9 @@
 :root {
-  --dark-background-color: rgb(32, 33, 38);
-  --dark-content-color : rgb(65, 65, 65);
+  --background-color: rgb(32, 33, 38);
+  --sub-background-color : rgb(65, 65, 65);
   --bottom-bar : rgb(10, 46, 74);
   --text-color:  rgb(7, 172, 249);
+  --text-highlight : rgb(10, 180, 250);
 
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -10,7 +11,7 @@
   font-weight: 400;
 
   color: var(--text-color);
-  background-color: var(--dark-background-color);
+  background-color: var(--background-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -57,7 +58,7 @@ button {
   width: 108px;
   height: 36px;
   margin: 8px;
-  background-color: var(--dark-content-color);
+  background-color: var(--sub-background-color);
   color: var(--text-color);
   border-radius: 8px;
   border: 1px solid transparent;
@@ -71,16 +72,16 @@ button {
 
 button:hover {
   border-color: var(--text-color);
-  background-color: var(--dark-background-color);
+  background-color: var(--background-color);
 }
 
 
 /* User Defined  */
+
 .row {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  padding: 0 3vw;
+  padding: 0 24px;
 }
 
 .col {
@@ -90,21 +91,43 @@ button:hover {
 }
 
 .app-header {
-  color: var(--text-color);
-  border-bottom: 1px dashed var(--text-color);
+  color: var(--text-highlight);
+  border-bottom: 0.5px dashed var(--text-highlight);
   font-weight: bold;
-  min-width: 12pc;
+  min-width: 16pc;
   margin: 0 auto;
-  margin-bottom: 2vw;
+  margin-bottom: 16px;
+}
+
+/* Code Editor */
+
+.app-file-render {
+  font-family:monospace;
+  text-align: left;
+  border: none;
+  min-height: 50vh;
+  background-color: var(--sub-background-color);
+}
+
+.app-active-filename {
+  align-items: center;
+  text-align: center;
+  font-size: 0.8em;
+  background-color: var(--bottom-bar);
+  color: var(--text-highlight);
+  height: 20px;
+  border: none;
+  margin: unset;
+  padding: 8px 0;
 }
 
 .app-code-editor {
-  overflow-y: auto;
+  overflow: auto;
   border: none;
-  border-radius: 8px;
   width: 88vw;
-  height: 75vh;
+  height: 82vh;
   margin: 0 auto;
+  border-radius: 8px;
 }
 
 .app-code-editor::-webkit-scrollbar {
@@ -117,29 +140,26 @@ button:hover {
   border-radius: 10px;
 }
 .app-code-editor::-webkit-scrollbar-track {
-  background-color: var(--dark-background-color)
+  background-color: var(--background-color)
 }
 
-.app-file-render {
-  font-family:monospace;
-  text-align: left;
-  border: none;
-  min-height: 50vh;
-  border-radius: 8px;
-  background-color: var(--dark-content-color);
-  margin-top: 1vw;
-}
+/* Control Menu */
 
 .app-menu-content {
-  padding-left: 3vw;
+  padding-left: 30px;
   text-align: left;
 }
 
 .highlight-text {
   position: relative;
+  padding: 3px;
+  text-align: center;
   margin: auto 0;
-  color: var(--text-highlight-color);
+  text-wrap: wrap;
+  color: var(--text-highlight);
 }
+
+/* Main UI Bottom Bar */
 
 .app-bottom-bar {
   position: fixed;
@@ -147,6 +167,7 @@ button:hover {
   display: flex;
   flex-direction: row;
   background-color: var(--bottom-bar);
+  color: var(--text-highlight);
   width: 100vw;
   left: 0;
   bottom: 0;
@@ -161,3 +182,4 @@ button:hover {
   padding-right: 10px;
   margin: auto 0;
 }
+

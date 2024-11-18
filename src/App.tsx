@@ -1,19 +1,16 @@
 // User Interface - Main Entry Point
-
-// Tauri API
-import { invoke } from "@tauri-apps/api/core";
-
-// React UI
 import "./App.css";
 import noteIcon from "/icons/notes-128.png";
-import React, { useState } from "react";
+
+// Tauri
+import { invoke } from "@tauri-apps/api/core";
+
+// React 
 import ReactDOM from "react-dom/client";
+import React, { useState } from "react";
+import CodeEditor from "@uiw/react-textarea-code-editor";
+import rehypePrism from "rehype-prism-plus";
 import Sidebar from "./components/Sidebar";
-
-// Code UI
-import CodeEditor from '@uiw/react-textarea-code-editor';
-import rehypePrism from 'rehype-prism-plus';
-
 
 function App() {
   // App controls
@@ -25,7 +22,7 @@ function App() {
   const [currentDir, setCurrentDir] = useState<string>("");
     
   const [activePath, setActivePath] = useState<string>("");
-  const [_, setActiveContent] = useState<string[]>([]);
+  const [activeContent, setActiveContent] = useState<string[]>([]);
   const [activeContentString, setActiveContentString] = useState<string>("");
   const [contentType, setContentType] = useState<string>("");
   
@@ -39,6 +36,11 @@ function App() {
   async function getCWD() {
     setCwd(await invoke("get_cwd"));
   }
+  
+  async function setCWD(path:string) {
+    await invoke("set_cwd", {path: path});
+  }
+
   async function scanPath(path:string) {
     setActivePath(path);
 
@@ -61,33 +63,42 @@ function App() {
   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if(formAction === "setDir" && currentDir.length > 0){
-      await invoke("set_cwd", {path: currentDir});
+      setCWD(currentDir);
       setCurrentDir("");
       getCWD();
     }
 
-    if(formAction === "OK"){
+    else if(formAction === "OK"){
+      setSaveResult([]);
+      
       if (activePath){
         scanPath(activePath);
-      }
-      
-      else {
+      } else {
         setActivePath("");
         setActiveContent([]);
         setActiveContentString("");
-        setSaveResult([]);
       }
-    } else if(formAction === "SAVE" && savePath && activeContentString.length > 0){
-      saveToFile("create", savePath, activeContentString);
-      setSavePath("");
+    } 
+    
+    else if(formAction === "SAVE"){
+      if (savePath && activeContentString.length > 0){
+        saveToFile("create", savePath, activeContentString);
+        setSavePath("");
+      } else {
+        setSaveResult(["Save-as error : please enter a valid filepath", ]);
+      }
+      
+    } 
+    
+    else if(formAction === "OVERWRITE"){
+      if(activePath && activeContentString.length > 0){
+        saveToFile("overwrite", activePath, activeContentString);
+        setSavePath("");
+      } else {
+        setSaveResult(["Save error : could not overwrite existing file", ]);
+      }
 
-    } else if(formAction === "OVERWRITE" && savePath && activeContentString.length > 0){
-      saveToFile("overwrite", savePath, activeContentString);
-      setSavePath("");
-
-    } else if (formAction === "SAVE" && !savePath && activeContentString.length > 0) {
-      setSaveResult(["Save error : please enter a valid filepath", ]);
-    }
+    } 
   }
 
   async function handleCodeUI(text:string) {
@@ -96,13 +107,14 @@ function App() {
   }
   
   return (
-    <main className="container" onLoad={getCWD}>
-      {/* Header */}
-      <h2 className="app-header">Photon</h2>
-      
-      {/* Sidebar */}
+    <main className="container" onLoad={() => {
+      setCWD("%USERPROFILE%/Documents")
+      getCWD();
+      }}>
+      <h3 className="app-header">Photon</h3>
+
       <Sidebar>
-        {/* Set CWD */}
+        {/* Filesystem Navigation */}
         <form className="row" onSubmit={(e) => handleFormSubmit(e)}>  
           <button type="submit" onClick={() => setFormAction("setDir")}>Set</button>
           <input 
@@ -112,10 +124,10 @@ function App() {
           />
         </form> 
 
-        {/* Filesystem Scan */}
         <form className="col" onSubmit={(e) => handleFormSubmit(e)}>
           <div className="row">
-            {/* User filepath */}
+      
+            {/* Load / Save File */}
             <div className="col">
               <button type="submit" onClick={() => setFormAction("OK")}>Load</button>
               <button type="submit" onClick={() => setFormAction("OVERWRITE")}>Save</button>
@@ -132,7 +144,7 @@ function App() {
             />
           </div>
           
-          {/* User save as location */}
+          {/* Save-as File */}
           <div className="row">
             <button type="submit" onClick={() => setFormAction("SAVE")}>Save As</button>
             <input
@@ -141,15 +153,11 @@ function App() {
               onChange={(e) => setSavePath(e.target.value)}
             />                
           </div>
+        </form> 
 
-          <pre className="highlight-text">{saveResult.length > 0 ? saveResult : null}</pre>
-        </form>    
-      </Sidebar>
-      
-      {/* Main user interface */}
-      <div className="row">
+        {/* UI Display Controls */}
         <div className="row">
-          <pre>Font Size : </pre>
+          <button>Font Size</button>
           <input 
             type="number"
             min={10}
@@ -161,19 +169,28 @@ function App() {
         </div>
 
         <div className="row">
-          <pre>File format : </pre>
+          <button>Code Format</button>
           <input
-            className="input-small"
+            className="input"
             placeholder="Format..."
             value={contentType}
             onChange={(e) => setContentType(e.target.value)}
           />
         </div>
 
-      </div>
-
+        <pre className="highlight-text">{saveResult.length > 0 ? saveResult : null}</pre>
+      </Sidebar>
       
+      {/* Editor UI */}  
       <div className="app-code-editor">
+        
+        <p className="app-active-filename">
+          {activePath !== "." && activeContent.length > 0 && activePath.split(".").length > 1 ? 
+            activePath.split("/").slice(-1) 
+            : null
+          }
+        </p>
+        
         <CodeEditor
           value={activeContentString}
           language={contentType}
@@ -187,16 +204,17 @@ function App() {
         />
       </div>
 
+      {/* Bottom Info Bar */}
       <div className="app-bottom-bar">
         <img src={noteIcon} className="app-bottom-bar-icon" />
-        <pre className="highlight-text"><b>{cwd}\{activePath && activePath !== "."? activePath : null}</b></pre>
+        <pre className="highlight-text"><b>{cwd.replace(/\\/g, "/")}</b></pre>
       </div>
 
     </main>
   );
 }
 
-// Render App
+// Run App
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <App />
