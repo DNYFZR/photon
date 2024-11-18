@@ -1,6 +1,6 @@
-import logo from "/wave-128.png";
-import React from "react";
-import { useState, useRef } from "react";
+// Resizable sidebar with persistent menu icon
+
+import React, { useState, useRef } from "react";
 import "./Sidebar.css";
 import menuIcon from "/icons/menu-128.png";
 
