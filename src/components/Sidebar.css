@@ -26,7 +26,7 @@
   height: 40px;
   padding: unset;
   min-width: unset;
-  background-color: var(--dark-background-color);
+  background-color: var(--background-color);
 }
 
 .sidebar-button-img{
@@ -35,7 +35,7 @@
 }
 
 .sidebar-container {
-  background-color: var( --dark-background-color);
+  background-color: var( --background-color);
   left: 0;
   padding: 0em;
   display: flex;
