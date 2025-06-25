@@ -4,7 +4,7 @@
   font-family:monospace;
   text-align: left;
   border: none;
-  min-height: 50vh;
+  min-height: 80vh;
   background-color: var(--sub-background-color);
 }
 
@@ -25,7 +25,7 @@
   border: none;
   width: 88vw;
   min-height: 50vh;
-  max-height: 75vh;
+  max-height: 90vh;
   margin: 0 auto;
   border-radius: 8px;
 }

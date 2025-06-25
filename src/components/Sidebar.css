@@ -1,17 +1,16 @@
 .sidebar {
   z-index: 2;
   position: fixed;
-  min-height: 100vh;
   top: 0;
   left: 0;
   transition: width 1s ease-in-out;
 }
 
 .sidebar-button {
-  z-index:500;
+  z-index:99;
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 8px;
+  right: 8px;
   width: 40px;
   height: 40px;
   padding: unset;
@@ -25,11 +24,20 @@
 }
 
 .sidebar-container {
-  background-color: var( --background-color);
-  left: 0;
   display: flex;
   height: 100vh;
+  background-color: var( --background-color);
+  
+}
+
+.sidebar-main {
+  display: flex;
+  flex-direction: row;
   overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 400px;
+  max-width: 90vw;
+  border-radius: 16px;
 }
 
 .sidebar-main::-webkit-scrollbar {
@@ -45,36 +53,19 @@
   background-color: var(--background-color)
 }
 
-
-.sidebar-main {
-  z-index: 2;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 1em 0em;
-  flex-grow: 0;
-  flex-shrink: 0;
-  min-width: 400px;
-  max-width: 90vw;
-  display: flex;
-  flex-direction: row;
-  border-radius: 16px;
-}
-
 .sidebar-frame {
-  z-index: 1;
   flex: 1;
-  display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  border-radius: 16px;
+  display: flex;
+  min-height: max-content;
 }
 
 .sidebar-content {
-  z-index: 999;
+  z-index: 1;
 }
 
 .sidebar-main .sidebar-content {
-  flex: 10;
+  flex: 1;
 }
 
 .sidebar-main .sidebar-resizer {
@@ -88,5 +79,5 @@
 
 .sidebar-main .sidebar-resizer:hover, .sidebar-main .sidebar-resizer:active {
   width: 30px;
-  height: inherit;
+  height: 100vh;
 }
