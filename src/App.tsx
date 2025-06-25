@@ -2,6 +2,9 @@
 import "./App.css";
 import noteIcon from "/icons/notes-128.png";
 import arrowIcon from "/icons/arrow-128.png";
+import saveIcon from "/icons/save-128.png";
+import settingsIcon from "/icons/settings-128.png";
+
 
 // Tauri
 import { invoke } from "@tauri-apps/api/core";
@@ -33,7 +36,7 @@ function App() {
   const [contentType, setContentType] = useState<string>("");
   const [saveResult, setSaveResult] = useState<string[]>([]);
   const [savePath, setSavePath] = useState<string>("");
-
+  
   async function getCWD() {
     setCwd(await invoke("get_cwd"));
   }
@@ -126,58 +129,35 @@ function App() {
     getCWD();
   }
 
-  return (
-    <main className="container" onLoad={() => { 
-      setCWD(cwd); 
-      getCWD();
-      scanFS(cwd);
-    }}>
-      <h3 className="app-header">Photon Editor</h3>
+  function displayFilesystem(cwdListing: string[]) {
+    return cwdListing.map((v) => {
+      const newCWD = `${cwd}/${v}`;  
+      const v_split = v.split(".");  
       
-      <Sidebar>
-        <div className="row-header">
-          <h4>File Explorer</h4>
-          <button
-            onClick={() => {
-              const newCWD = `${cwd}/../`;
-              handleCwdUpdate(newCWD);
-              }
-            }>
-              <img src={arrowIcon} title="Back" alt="go back" className="fs-back-icon" />
-            </button>
+      // Handle files
+      if(v_split[0] !== "" && v_split.length > 1) {
+        return <button className="fs-entry" onClick={() => {
+          setActivePath(newCWD);
+          setContentType(v.split(".").reverse()[0]);
           
-        </div>
-        
-        <div>
-          {cwdListing.map((v) => {
-            const newCWD = `${cwd}/${v}`;  
-            const v_split = v.split(".");  
-            
-            if(v_split[0] !== "" && v_split.length > 1) {
-              return <button className="fs-entry" onClick={() => {
-                setActivePath(newCWD);
-                setContentType(v.split(".").reverse()[0]);
-                
-                setActiveContent("");
-                setSaveResult([]);
+          setActiveContent("");
+          setSaveResult([]);
 
-                scanPath(newCWD);
-              }}>• {v}</button>
+          scanPath(newCWD);
+        }}>📄 {v}</button>
 
-            } else {
-              return <button className="fs-entry" onClick={() => handleCwdUpdate(newCWD)}>
-                • {v}
-              </button>
-            }
-          }
-          )}
-        </div>
-      </Sidebar>
+      // Handle dir's
+      } else {
+        return <button className="fs-entry" onClick={() => handleCwdUpdate(newCWD)}>
+          📁 {v}
+        </button>
+      }
+    })
+  }
 
-      <Popup name="App Controls">
+  function configureUserSettings() {
+    return <Popup title="Settings" icon={settingsIcon}>
         <div className="col">
-
-          {/* Filesystem Navigation */}
           <div className="row">
             <label>Set CWD : </label>
             <form onSubmit={(e) => handleFormSubmit(e)}>  
@@ -195,28 +175,6 @@ function App() {
             </form>
           </div>
 
-          <div className="row">
-            <label>Save file : </label>
-            <form onSubmit={(e) => handleFormSubmit(e)}>    
-              <div className="row">
-                <input
-                  placeholder="filepath (save-as only)..."
-                  value={savePath}
-                  onChange={(e) => setSavePath(e.target.value)}
-                />
-                <button type="submit" onClick={() => {
-                  if(savePath.length > 0) {
-                    setFormAction("SAVE");
-                  } else {
-                    setFormAction("OVERWRITE");
-                  }
-                }}>OK</button>
-              </div>
-            
-              <pre className="highlight-text">{saveResult.length > 0 ? saveResult : null}</pre>
-            </form> 
-          </div>
-          
           <div className="row">
             <label>Font size : </label>
             <input 
@@ -241,18 +199,36 @@ function App() {
 
         </div>
       </Popup>
+  }
 
-      <Editor
-        filename={
-          activePath !== "." && activeContent.length > 0 && activePath.split(".").length > 1 ? 
-            activePath.split("/")[-1] : ""
-          }
-        fileContent={activeContent}
-        onUserUpdate={(e) => setActiveContent(e.target.value)}
-        fontSize={fontSize}
-        contentType={contentType}
-      />
-      
+  function savePopup() {
+    return <Popup title="Save Options" icon={saveIcon}>
+        <div className="row">
+          <label>Save file : </label>
+          <form onSubmit={(e) => handleFormSubmit(e)}>    
+            <div className="row">
+              <input
+                placeholder="filepath (save-as only)..."
+                value={savePath}
+                onChange={(e) => setSavePath(e.target.value)}
+              />
+              <button type="submit" onClick={() => {
+                if(savePath.length > 0) {
+                  setFormAction("SAVE");
+                } else {
+                  setFormAction("OVERWRITE");
+                }
+              }}>OK</button>
+            </div>
+          
+            <pre className="highlight-text">{saveResult.length > 0 ? saveResult : null}</pre>
+          </form> 
+        </div>
+      </Popup>
+  }
+
+  function bottomBarUI() {
+    return(
       <div className="app-bottom-bar">
         <div className="row">
           <img src={noteIcon} className="app-bottom-bar-icon" />
@@ -262,7 +238,42 @@ function App() {
         <pre className="highlight-text">syntax highlighting : {contentType == "" ? "not set" : contentType}</pre>
         <pre className="highlight-text">editor font size : {fontSize}</pre>
       </div>
+    );
+  }
 
+  return (
+    <main className="container" onLoad={() => { 
+      setCWD(cwd); 
+      getCWD();
+      scanFS(cwd);
+    }}>      
+      <Sidebar>
+        <h4>File Explorer</h4>
+        <div className="row-header">
+          {configureUserSettings()}
+
+          {savePopup()}
+
+          <button onClick={() => handleCwdUpdate(`${cwd}/../`)}>
+            <img src={arrowIcon} title="Back" alt="go back" className="fs-back-icon" />
+          </button>
+        </div>
+        
+        <div>
+          {displayFilesystem(cwdListing)}
+        </div>
+      </Sidebar>
+
+
+      <Editor
+        filename={activePath.split("/").reverse()[0]}
+        fileContent={activeContent}
+        onUserUpdate={(e) => setActiveContent(e.target.value)}
+        fontSize={fontSize}
+        contentType={contentType}
+      />
+      
+      {bottomBarUI()}
     </main>
   );
 }

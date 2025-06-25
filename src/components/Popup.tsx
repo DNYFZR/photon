@@ -1,25 +1,25 @@
 import "./Popup.css";
-import settingsIcon from "/icons/settings-128.png";
 import React, { useState } from "react";
 
 interface PopupProps {
-  name: string;
+  title:string
+  icon: string;
   children: React.ReactNode;
 }
 
-const Popup: React.FC<PopupProps> = ({ name, children }) => {
+const Popup: React.FC<PopupProps> = ({ title, icon, children }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);  
 
   return(
     <div>
-      <button className="popup-toggle" onClick={() => setShowPopup(!showPopup)}>
-        <img src={settingsIcon} className="popup-toggle-icon" />
+      <button onClick={() => setShowPopup(!showPopup)}>
+        <img src={icon} className="popup-toggle-icon" />
       </button>
       
       {showPopup && (
         <div className="popup-container">
           <div className="popup-top-bar">
-            <span>{name}</span>
+            <span>{title}</span>
           </div>
 
           <div className="popup-content">
