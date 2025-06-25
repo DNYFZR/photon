@@ -5,6 +5,16 @@ use std::env;
 use std::path::Path;
 
 // System Navigation
+#[tauri::command]
+pub fn is_dir(path:&str) -> bool {
+    // list files & sub-directories for path 
+    let entries = fs::read_dir(path);
+
+    match entries {
+        Ok(_) => return true,
+        Err(_) => return false,
+    }
+}
 
 #[tauri::command]
 pub fn scan_path(path:&str) -> Vec<String> {
@@ -22,6 +32,24 @@ pub fn scan_path(path:&str) -> Vec<String> {
         Err(e) => vec![String::from("error"), e.to_string()],
         
     }   
+}
+
+#[tauri::command]
+pub fn scan_fs(path:&str) -> Vec<String> {
+    // return a vector containing the contents of a directory or file
+    let path_meta = fs::metadata(path);
+    
+    match path_meta {
+        Ok(path_meta) => {
+            match path_meta.is_dir() {
+                true => return list_dir(path),
+                false => return vec![],
+            };
+
+        },
+        Err(e) => return vec![String::from("error"), e.to_string()],
+        
+    };   
 }
 
 fn read_file(path:&str) -> Vec<String> {

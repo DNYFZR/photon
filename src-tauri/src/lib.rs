@@ -4,7 +4,7 @@
 mod filesystem;
 
 // Components
-use filesystem::{ get_cwd, set_cwd, scan_path, save_file, save_file_as };
+use filesystem::{ get_cwd, set_cwd, scan_path, scan_fs, save_file, save_file_as, is_dir };
 
 
 // Configuration
@@ -17,8 +17,10 @@ pub fn run() {
             get_cwd,
             set_cwd,
             scan_path,
+            scan_fs,
             save_file,
             save_file_as,
+            is_dir,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
