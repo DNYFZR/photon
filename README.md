@@ -1,6 +1,6 @@
 <h1 align="center"> photon </h1>
 
-atm : desktop file / code editor
+🔥 blazingly fast desktop code editor application...
 
 ### stack
 
@@ -8,7 +8,7 @@ atm : desktop file / code editor
 
 🧱 vite (build) & vitest (test) engines
 
-🥡 sqlite or duckdb storage (tbd)
+🥡 sqlite storage (tbd)
 
 ### functionality
 
