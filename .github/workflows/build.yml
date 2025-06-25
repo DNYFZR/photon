@@ -30,5 +30,6 @@ jobs:
         # the action automatically replaces \_\_VERSION\_\_ with the app version.
         tagName: photon-v__VERSION__ 
         releaseName: 'photon v__VERSION__'
+        includeUpdaterJson: true
         releaseDraft: true
         prerelease: false
