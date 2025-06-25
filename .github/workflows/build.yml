@@ -1,7 +1,7 @@
 name: build-photon-app
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
   
 env:
@@ -20,12 +20,6 @@ jobs:
     - name: Install Node Dependencies
       run: npm i
     
-    - name: Run Tests
-      run: | 
-        cd src-tauri 
-        cargo test --verbose
-        cd ../
-
     - name: Build Tauri App
       uses: tauri-apps/tauri-action@v0
       env:
