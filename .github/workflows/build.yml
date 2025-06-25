@@ -1,0 +1,32 @@
+name: build-photon-app
+
+on:
+  push:
+    branches: [ "main" ]
+  
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  execute:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
+    - uses: actions/setup-node@v4
+      with:
+          node-version: lts/*
+  
+    - name: Install Node Dependencies
+      run: npm i
+    
+    - name: Build Tauri App
+      uses: tauri-apps/tauri-action@v0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # the action automatically replaces \_\_VERSION\_\_ with the app version.
+        tagName: photon-v__VERSION__ 
+        releaseName: 'photon v__VERSION__'
+        releaseDraft: true
+        prerelease: false
