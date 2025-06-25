@@ -1,5 +1,8 @@
 <h1 align="center"> photon </h1>
 
+[![test](https://github.com/DNYFZR/rs-photon/actions/workflows/test.yml/badge.svg)](https://github.com/DNYFZR/rs-photon/actions/workflows/test.yml)
+[![build](https://github.com/DNYFZR/rs-photon/actions/workflows/build.yml/badge.svg)](https://github.com/DNYFZR/rs-photon/actions/workflows/build.yml)
+
 🔥 blazingly fast desktop code editor application...
 
 ### stack
