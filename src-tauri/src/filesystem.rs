@@ -60,7 +60,7 @@ fn read_file(path:&str) -> Vec<String> {
                 |x| x.unwrap_or(String::from("unsupported file type"))
                 ).collect::<Vec<String>>();
             
-            if res_str[0] == "unsupported file type" {
+            if res_str.len() == 0 || res_str[0] == "unsupported file type" {
                 return vec![String::from("Unsupported file type"), ];
             } else {
                 return res_str;
