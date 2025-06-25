@@ -1,14 +1,15 @@
 :root {
-  --background-color: rgb(32, 33, 38);
-  --sub-background-color : rgb(65, 65, 65);
-  --bottom-bar : rgb(10, 46, 74);
-  --text-color:  rgb(7, 172, 249);
+  --background-color: rgb(32, 32, 32);
+  --popup-background-color: rgb(50, 50, 50);
+  --sub-background-color : rgb(3, 128, 173);
+  --text-color:  rgb(200, 200, 200);
   --text-highlight : rgb(10, 180, 250);
 
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 400;
+  letter-spacing: 0.25px;
+  font-weight: 600;
 
   color: var(--text-color);
   background-color: var(--background-color);
@@ -32,14 +33,13 @@
 h1, h2, h3, h4 { 
   color: var(--text-color);
   text-align: center;
-  border-bottom: 1px dashed var(--text-color);
   padding: 1vw;
 }
 
 input {
   width: 180px;
   height: 36px;
-  margin: 8px;
+  margin: 12px;
   border-radius: 8px;
   border: none;
   font-size: 0.95em;
@@ -55,7 +55,7 @@ input {
 }
 
 button {
-  width: 108px;
+  max-width: 108px;
   height: 36px;
   margin: 8px;
   background-color: var(--sub-background-color);
@@ -75,75 +75,67 @@ button:hover {
   background-color: var(--background-color);
 }
 
+label {
+  padding: 0;
+  min-width:20vw;
+  color: var(--text-color);
+}
 
 /* User Defined  */
+.row-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 
 .row {
   display: flex;
   flex-direction: row;
-  padding: 0 24px;
+  align-items: center;
 }
 
 .col {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .app-header {
   color: var(--text-highlight);
-  border-bottom: 0.5px dashed var(--text-highlight);
+  border-bottom: none;
   font-weight: bold;
   min-width: 16pc;
   margin: 0 auto;
   margin-bottom: 16px;
 }
 
-/* Code Editor */
 
-.app-file-render {
-  font-family:monospace;
-  text-align: left;
+/* File Explorer Menu */
+.fs-entry {
+  display: flex;
+  max-width: 50vw;
+  width: inherit;
+  background-color: unset;
+  box-shadow: unset;
   border: none;
-  min-height: 50vh;
-  background-color: var(--sub-background-color);
+  border-radius: 0;
+  color: var(--text-color);
+  padding: 0.5em;
 }
 
-.app-active-filename {
-  align-items: center;
-  text-align: center;
-  font-size: 0.8em;
-  background-color: var(--bottom-bar);
-  color: var(--text-highlight);
-  height: 20px;
+.fs-entry:hover {
+  border-bottom: 2px solid var(--sub-background-color);
+  background-color: var(--background-color);
+}
+
+.fs-back-icon {
+  width: 20px;
+  margin: auto 0;
   border: none;
-  margin: unset;
-  padding: 8px 0;
+  box-shadow: none;
 }
-
-.app-code-editor {
-  overflow: auto;
-  border: none;
-  width: 88vw;
-  height: 82vh;
-  margin: 0 auto;
-  border-radius: 8px;
-}
-
-.app-code-editor::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-  background-color: var(--text-color);
-}
-.app-code-editor::-webkit-scrollbar-thumb {
-  background-color: var(--text-color);
-  border-radius: 10px;
-}
-.app-code-editor::-webkit-scrollbar-track {
-  background-color: var(--background-color)
-}
-
-/* Control Menu */
 
 .app-menu-content {
   padding-left: 30px;
@@ -154,20 +146,22 @@ button:hover {
   position: relative;
   padding: 3px;
   text-align: center;
+  font-weight: bold;
   margin: auto 0;
   text-wrap: wrap;
-  color: var(--text-highlight);
+  color: var(--text-color);
 }
 
 /* Main UI Bottom Bar */
 
 .app-bottom-bar {
+  z-index: 999;
   position: fixed;
-  font-size: 0.8em;
+  font-size: 1em;
   display: flex;
   flex-direction: row;
-  background-color: var(--bottom-bar);
-  color: var(--text-highlight);
+  justify-content: space-evenly;
+  background-color: var(--sub-background-color);
   width: 100vw;
   left: 0;
   bottom: 0;

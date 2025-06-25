@@ -1,0 +1,44 @@
+/* Code Editor */
+
+.app-file-render {
+  font-family:monospace;
+  text-align: left;
+  border: none;
+  min-height: 50vh;
+  background-color: var(--sub-background-color);
+}
+
+.app-active-filename {
+  align-items: center;
+  text-align: center;
+  font-size: 0.8em;
+  background-color: var(--sub-background-color);
+  color: white;
+  height: 20px;
+  border: none;
+  margin: unset;
+  padding: 8px 0;
+}
+
+.app-code-editor {
+  overflow: auto;
+  border: none;
+  width: 88vw;
+  min-height: 50vh;
+  max-height: 75vh;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
+.app-code-editor::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: var(--sub-background-color);
+}
+.app-code-editor::-webkit-scrollbar-thumb {
+  background-color: var(--sub-background-color);
+  border-radius: 10px;
+}
+.app-code-editor::-webkit-scrollbar-track {
+  background-color: var(--background-color)
+}

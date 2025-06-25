@@ -52,10 +52,8 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
             ref={sidebarRef}
             className="sidebar-main"
             style={{ width: sidebarWidth }}
-            // onMouseDown={(e) => e.preventDefault()}
           >
             <div className="sidebar-content">
-              <h3 className="sidebar-title">Control Panel</h3>
               {children}
             </div>
             

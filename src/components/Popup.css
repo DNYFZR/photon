@@ -1,0 +1,67 @@
+.popup-toggle {
+    position: absolute;
+    top: 20px;
+    left: 99%;
+    -webkit-transform: translateX(-99%);
+    transform: translateX(-99%);
+
+    background-color: inherit;
+    border: none;
+    box-shadow: none;
+}
+
+.popup-toggle-icon {
+  width: 24px;
+  margin: auto 0;
+}
+
+.popup-container {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    
+    background-color: var(--popup-background-color);
+    border-radius: 16px;
+    min-width: 60vw;
+    min-height: 10vw;
+}
+
+.popup-top-bar {
+  border-radius: 16px 16px 0 0;
+    background-color: var(--sub-background-color);
+    color: white;
+    padding-bottom: 0.2em;
+    justify-content: center;
+    font-weight: 525;
+}
+
+.popup-content {
+    max-height: 24vw;
+    overflow-y: auto;
+    padding-top: 1em;
+    padding-bottom: 2em;
+}
+
+.popup-content::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+  background-color: var(--background-color);
+}
+.popup-content::-webkit-scrollbar-thumb {
+  background-color: var(--background-color);
+  border-radius: 16px;
+}
+.popup-content::-webkit-scrollbar-track {
+  background-color: var(--popup-background-color)
+}
+
+.popup-bottom-bar {
+    justify-content: start;
+    padding-bottom: 0.2em;
+}
