@@ -25,12 +25,18 @@ jobs:
     - name: Build Windows App
       run: npm run tauri build 
 
-    - name: Get App Build Version
-      run: echo "APP_VERSION=npm pkg get version --workspaces=false" | Out-File -FilePath $env:GITHUB_ENV -Append
+    - name: Get Build Version
+      id: package-version
+      shell: pwsh
+      run: |
+        # Extract version from package.json using npm, remove quotes
+        $version = npm pkg get version --ws=false | ConvertFrom-Json
+        # Set environment variable for subsequent steps
+        echo "APP_VERSION=$version" >> $env:GITHUB_ENV
 
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
         artifacts: "/src-tauri/target/release/bundle/msi/*.msi"
         bodyFile: "README.md"
-        tag: photon v${{ env.APP_VERSION}}
+        tag: "photon-v${{ env.APP_VERSION}}"
