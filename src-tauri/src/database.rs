@@ -1,9 +1,8 @@
 // Backend Database Operations
-
 use rusqlite::Connection;
 use serde_json;
 
-const DB: &str = "database/user.db"; 
+const DB: &str = "%USERPROFILE%/.photon/app.db"; 
 
 fn connect(database: &str, table:&str) -> Connection {
     let create_table: &str = &format!("CREATE TABLE IF NOT EXISTS {} (name TEXT PRIMARY KEY, data JSON)", table);

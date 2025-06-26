@@ -1,15 +1,14 @@
 // User Interface - Main Entry Point
 import "./App.css";
-import noteIcon from "/icons/notes-128.png";
 import arrowIcon from "/icons/arrow-128.png";
+import noteIcon from "/icons/notes-128.png";
 import saveIcon from "/icons/save-128.png";
 import settingsIcon from "/icons/settings-128.png";
 
-
-// Tauri
+// Tauri Backend API
 import { invoke } from "@tauri-apps/api/core";
 
-// React 
+// React Frontend
 import ReactDOM from "react-dom/client";
 import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
@@ -45,25 +44,31 @@ function App() {
     await invoke("set_cwd", {path: path});
   }
 
-  async function scanFS(path:string) {
-    const requestedContent:string[] = await invoke("scan_fs", { path: path });
-    if(requestedContent[0] !== "error") {
-      setCwdListing(requestedContent);
-    } else {
-      setCwdListing([]);
-    }
-  }
-
-  async function scanPath(path:string) {
-    setActivePath(path);
-    const requestedContent:string[] = await invoke("scan_path", { path: path });
+  async function scanFS(path:string, readFiles:boolean) {
+    const requestedContent:string[] = await invoke("scan_fs", { 
+      path: path, 
+      readFiles: readFiles // camel case is converted into snake case in rust backend
+    });
     
-    if (requestedContent.length > 0) {
-      const content_as_string = `${requestedContent[0]}\n`.concat(...requestedContent.slice(1).map((v) => `${v}\n`)); 
-      setActiveContent(content_as_string);
-      setContentType(path.split(".").reverse()[0]);
-    } else {
-      setActiveContent("");
+    if(readFiles) { // Get file contents
+      if (requestedContent.length > 0) {
+        const content_as_string = `${requestedContent[0]}\n`.concat(...requestedContent.slice(1).map((v) => `${v}\n`)); 
+        setActiveContent(content_as_string);
+
+        // For automatic syntax highlighting in editor UI
+        setContentType(path.split(".").reverse()[0]);
+      
+      } else {
+        setActiveContent("");
+      }
+    }
+
+    else { // Get filesystem listing 
+      if(requestedContent[0] !== "error") {
+        setCwdListing(requestedContent);
+      } else {
+        setCwdListing([]);
+      }
     }
   }
 
@@ -90,8 +95,8 @@ function App() {
       setSaveResult([]);
       
       if (activePath){
-        scanPath(activePath);
-        scanFS(activePath);
+        scanFS(activePath, true);
+        scanFS(activePath, false);
 
 
       } else {
@@ -124,7 +129,7 @@ function App() {
 
   async function handleCwdUpdate(path:string) {
     setCWD(path);
-    scanFS(path);
+    scanFS(path, false);
     setCurrentDir("");
     getCWD();
   }
@@ -143,7 +148,7 @@ function App() {
           setActiveContent("");
           setSaveResult([]);
 
-          scanPath(newCWD);
+          scanFS(newCWD, true);
         }}>📄 {v}</button>
 
       // Handle dir's
@@ -167,7 +172,7 @@ function App() {
                   value={currentDir}
                   onChange={(e) => {
                     setCurrentDir(e.target.value);
-                    scanFS(e.target.value);
+                    scanFS(e.target.value, false);
                     setFormAction("setDir");
                   }}
                 />
@@ -219,11 +224,11 @@ function App() {
                   setFormAction("OVERWRITE");
                 }
               }}>OK</button>
-            </div>
-          
-            <pre className="highlight-text">{saveResult.length > 0 ? saveResult : null}</pre>
+            </div>          
           </form> 
         </div>
+        
+        <pre className="highlight-text">{saveResult.length > 0 ? saveResult : null}</pre>
       </Popup>
   }
 
@@ -235,7 +240,10 @@ function App() {
           <pre className="highlight-text">{cwd.replace(/\\/g, "/")}</pre>
         </div>
         
-        <pre className="highlight-text">syntax highlighting : {contentType == "" ? "not set" : contentType}</pre>
+        {contentType !== "" ? 
+          <pre className="highlight-text">syntax highlighting : {contentType}</pre>
+          :null 
+        }
         <pre className="highlight-text">editor font size : {fontSize}</pre>
       </div>
     );
@@ -245,7 +253,7 @@ function App() {
     <main className="container" onLoad={() => { 
       setCWD(cwd); 
       getCWD();
-      scanFS(cwd);
+      scanFS(cwd, false);
     }}>      
       <Sidebar>
         <h4>File Explorer</h4>
@@ -263,7 +271,6 @@ function App() {
           {displayFilesystem(cwdListing)}
         </div>
       </Sidebar>
-
 
       <Editor
         filename={activePath.split("/").reverse()[0]}
