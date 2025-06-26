@@ -25,7 +25,7 @@
 
 .sidebar-container {
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 45px);
   background-color: var( --background-color);
   
 }
@@ -79,5 +79,4 @@
 
 .sidebar-main .sidebar-resizer:hover, .sidebar-main .sidebar-resizer:active {
   width: 30px;
-  height: 100vh;
 }
