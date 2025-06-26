@@ -26,12 +26,11 @@ jobs:
       run: npm run tauri build 
 
     - name: Get App Build Version
-      id: package-version
-      uses: martinbeentjes/npm-get-version-action@v1.3.1
+      run: echo "APP_VERSION=npm pkg get version --workspaces=false" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
         artifacts: "/src-tauri/target/release/bundle/msi/*.msi"
         bodyFile: "README.md"
-        tag: photon v${{ steps.package-version.outputs.current-version}}
+        tag: photon v${{ env.APP_VERSION}}
