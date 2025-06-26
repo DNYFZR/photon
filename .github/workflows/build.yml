@@ -22,14 +22,16 @@ jobs:
     - name: Install Node Dependencies
       run: npm i
     
-    - name: Build Tauri App
-      uses: tauri-apps/tauri-action@v0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build Windows App
+      run: npm run tauri build 
+
+    - name: Get App Build Version
+      id: package-version
+      uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1
       with:
-        # the action automatically replaces \_\_VERSION\_\_ with the app version.
-        tagName: photon-v__VERSION__ 
-        releaseName: 'photon v__VERSION__'
-        includeUpdaterJson: true
-        releaseDraft: true
-        prerelease: false
+        artifacts: "/src-tauri/target/release/bundle/msi/*.msi"
+        bodyFile: "README.md"
+        tag: photon v${{ steps.package-version.outputs.current-version}}
